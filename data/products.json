@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "description": "Holaa",
+      "price": 200,
+      "stock": 1
+    },
+    {
+      "id": 2,
+      "description": "Holaa",
+      "price": 200,
+      "stock": 1
+    },
+    {
+      "id": 3,
+      "description": "Holaa",
+      "price": 200,
+      "stock": 1
+    }
+  ]
+}
