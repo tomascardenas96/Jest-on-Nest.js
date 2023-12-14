@@ -25,16 +25,16 @@ describe('ProductController', () => {
     });
 
     it('should return a list of products', async () => {
-      // Configura el mock del servicio para devolver una lista de productos simulada
+      // Configuramos el mock del servicio para devolver una lista de productos simulada
       jest.spyOn(service, 'findAll').mockResolvedValue([
         { id: 1, description: 'Product 1', price: 19.99, stock: 100 },
         { id: 2, description: 'Product 2', price: 29.99, stock: 50 },
       ]);
 
-      // Realiza la llamada al método findAll del controlador
+      // Realizamos la llamada al método findAll del controlador
       const result = await controller.findAll();
 
-      // Verifica que el resultado sea la lista de productos simulada
+      // Verificamos que el resultado sea la lista de productos simulada
       expect(result).toEqual([
         { id: 1, description: 'Product 1', price: 19.99, stock: 100 },
         { id: 2, description: 'Product 2', price: 29.99, stock: 50 },
@@ -76,10 +76,10 @@ describe('ProductController', () => {
       // Creamos una instancia de controller
       const result = await controller.findAll();
 
-      // Verifica que el método service.findAll fue llamado
+      // Verificamos que el método service.findAll fue llamado
       expect(productTest).toHaveBeenCalled();
 
-      // Verifica que el resultado del controlador sea igual al array de prueba
+      // Verificamos que el resultado del controlador sea igual al array de prueba
       expect(result).toEqual(productMock);
     });
 
@@ -89,7 +89,7 @@ describe('ProductController', () => {
         .spyOn(service, 'findAll')
         .mockRejectedValue(new Error('Error forzado'));
 
-      // Verifica que la llamada al método findAll del controlador lanza un error
+      // Verificamos que la llamada al método findAll del controlador lanza un error
       await expect(controller.findAll()).rejects.toThrow(
         new Error('Error forzado'),
       );
@@ -99,7 +99,7 @@ describe('ProductController', () => {
   describe('findById', () => {
     it('should return a product by ID', async () => {
       const productId = 1;
-      // Configura un servicio mockeado.
+      // Configuramos un servicio mockeado.
       jest.spyOn(service, 'findById').mockResolvedValue({
         id: productId,
         description: 'Product 1',
@@ -120,10 +120,10 @@ describe('ProductController', () => {
     });
     it('should throw a NotFoundException for non-existent ID', async () => {
       const nonExistentId = 999;
-      // Configura el mock del servicio para devolver un producto simulado (o una lista vacía)
+      // Configuramos el mock del servicio para devolver un producto simulado (o una lista vacía)
       jest.spyOn(service, 'findById').mockResolvedValue(null);
 
-      // Verifica que la llamada al método findById del controlador lanza un error NotFoundException
+      // Verificamos que la llamada al método findById del controlador lanza un error NotFoundException
       await expect(controller.findById(nonExistentId)).rejects.toThrow(
         NotFoundException,
       );
@@ -138,16 +138,16 @@ describe('ProductController', () => {
         stock: 50,
       };
 
-      // Configura el mock del servicio para devolver el producto creado
+      // Configuramos el mock del servicio para devolver el producto creado
       jest.spyOn(service, 'create').mockResolvedValue({
         id: 1,
         ...createProductDto,
       });
 
-      // Realiza la llamada al método create del controlador
+      // Realizamos la llamada al método create del controlador
       const result = await controller.create(createProductDto);
 
-      // Verifica que el resultado sea el producto creado simulado
+      // Verificamos que el resultado sea el producto creado simulado
       expect(result).toEqual({
         id: 1,
         ...createProductDto,
@@ -163,7 +163,7 @@ describe('ProductController', () => {
         stock: 75,
       };
     
-      // Configura el mock del servicio para devolver una promesa que resuelva en el producto actualizado
+      // Configuramos el mock del servicio para devolver una promesa que resuelva en el producto actualizado
       jest.spyOn(service, 'update').mockResolvedValue(
         Promise.resolve<Product>({
           id: productId,
@@ -173,10 +173,10 @@ describe('ProductController', () => {
         })
       );
     
-      // Realiza la llamada al método update del controlador
+      // Realizamos la llamada al método update del controlador
       const result = await controller.update(productId, updateProductDto);
     
-      // Verifica que el resultado sea el producto actualizado simulado
+      // Verificamos que el resultado sea el producto actualizado simulado
       expect(result).toEqual({
         id: productId,
         ...updateProductDto,
@@ -187,7 +187,7 @@ describe('ProductController', () => {
     it('should throw a BadRequestException for invalid DTO', async () => {
       const productId = 1;
     
-      // Verifica que la llamada al método update del controlador lanza un error BadRequestException
+      // Verificamos que la llamada al método update del controlador lanza un error BadRequestException
       await expect(controller.update(productId, null)).rejects.toThrow(BadRequestException);
     });
   })
@@ -195,7 +195,7 @@ describe('ProductController', () => {
     it('should delete a product successfully', async () => {
       const productId = 1;
     
-      // Configura el mock del servicio para devolver el producto eliminado
+      // Configuramos el mock del servicio para devolver el producto eliminado
       jest.spyOn(service, 'delete').mockResolvedValue({
         id: productId,
         description: 'Producto eliminado',
@@ -203,7 +203,7 @@ describe('ProductController', () => {
         stock: 50,
       });
     
-      // Realiza la llamada al método delete del controlador
+      // Realizamos la llamada al método delete del controlador
       const result = await controller.remove(productId);
     
       // Verifica que el resultado sea el producto eliminado simulado
