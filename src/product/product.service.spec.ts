@@ -60,6 +60,7 @@ describe('ProductService', () => {
     it('should comply with basic syntax', async () => {
       //Verificamos si el objeto que devuelve cumple con la estructura basica.
       const resultOk = await service.findById(1);
+
       expect(resultOk).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -71,22 +72,30 @@ describe('ProductService', () => {
     });
   });
 
-  jest.mock('./product.service.ts');
+  describe('create', () => {
+    it('should return a new product successfully', async () => {
+      // Creamos un producto de prueba.
+      const newProduct: Product = {
+        id: 2,
+        description: 'Description for the new product',
+        price: 19.99,
+        stock: 100
+      };
 
-  // describe('create', () => {
-  //   it('should return a new product successfully', async () => {
-  //     const newProduct = {
-  //       id: 2,
-  //       description: 'Description for the new product',
-  //       price: 19.99,
-  //       stock: 100,
-  //     };
+      // Este espia simula el comportamiento del metodo 'create' y debera devolver una promesa resuelta con el objeto
+      // anteriormente creado.
+      const createSpy = jest.spyOn(service, 'create').mockResolvedValue(newProduct);
 
-  //     const createSpy = jest.spyOn(service, 'create');
+      // Llamamos al metodo 'create' del servicio con el producto de prueba como parametro, 
+      // el retorno quedara almacenado en la variable 'result' 
+      const result: Product = await service.create(newProduct);
+  
+      // Verificamos si el metodo 'create' del servicio haya sido llamado correctamente con el argumento 'newProduct'
+      expect(createSpy).toHaveBeenCalledWith(newProduct);
 
-  //     service.create(newProduct);
-
-  //     expect(createSpy).toHaveBeenCalledWith(newProduct);
-  //   });
-  // });
+      // Aca verificamos que el resultado obtenido del metodo 'create' coincida con el objeto 'newProduct', para 
+      // asegurar que el servicio este devolviendo el nuevo producto
+      expect(result).toEqual(newProduct);
+    });
+  });
 });

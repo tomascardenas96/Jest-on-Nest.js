@@ -58,7 +58,6 @@ describe('ProductController', () => {
     
       // Verifica que el resultado del controlador sea igual al array de prueba
       expect(result).toEqual(productMock);
-
     });
   });
 });
