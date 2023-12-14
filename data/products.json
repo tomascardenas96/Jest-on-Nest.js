@@ -2,9 +2,9 @@
   "products": [
     {
       "id": 1,
-      "description": "Holaa",
-      "price": 200,
-      "stock": 1
+      "description": "Updated product",
+      "price": 29.99,
+      "stock": 200
     },
     {
       "id": 2,

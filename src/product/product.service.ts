@@ -12,6 +12,9 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     try {
       const response: Response = await fetch('http://localhost:3150/products');
+      if (!response.ok) {
+        throw new NotFoundException();
+      }
       return response.json();
     } catch (error) {
       throw new NotFoundException();
@@ -20,9 +23,13 @@ export class ProductService {
 
   async findById(id: number): Promise<Product> {
     try {
-      const response: Response = await fetch(`http://localhost:3150/products/${id}`);
+      const response: Response = await fetch(
+        `http://localhost:3150/products/${id}`,
+      );
       const allProducts: Product[] = await this.findAll();
-      const productFound: Product = allProducts.find((product) => product.id === id);
+      const productFound: Product = allProducts.find(
+        (product) => product.id === id,
+      );
 
       if (productFound) {
         return await response.json();
@@ -62,7 +69,9 @@ export class ProductService {
   async update(id: number, updateProductDto: UpdateProductDto) {
     try {
       const allProducts: Product[] = await this.findAll();
-      const productFound: Product = allProducts.find((product) => product.id === id);
+      const productFound: Product = allProducts.find(
+        (product) => product.id === id,
+      );
 
       const { description, price, stock }: UpdateProductDto = updateProductDto;
       const newProduct: Product = {
@@ -71,7 +80,6 @@ export class ProductService {
         price: price ? price : productFound.price,
         stock: stock ? stock : productFound.stock,
       };
-     
 
       if (productFound) {
         fetch(`http://localhost:3150/products/${id}`, {
@@ -80,19 +88,20 @@ export class ProductService {
           body: JSON.stringify(newProduct),
         });
         return newProduct;
-
       } else {
-        throw new Error();
+        throw new BadRequestException('id non-existent');
       }
     } catch (err) {
       throw new BadRequestException('id non-existent');
     }
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     try {
       const allProducts: Product[] = await this.findAll();
-      const deletedProduct: Product = allProducts.find((product) => product.id === id);
+      const deletedProduct: Product = allProducts.find(
+        (product) => product.id === id,
+      );
 
       if (deletedProduct) {
         fetch(`http://localhost:3150/products/${id}`, {
@@ -101,7 +110,7 @@ export class ProductService {
         });
         return deletedProduct;
       } else {
-        throw new Error();
+        throw new NotFoundException('Id non-existent');
       }
     } catch (err) {
       throw new NotFoundException('Id non-existent');

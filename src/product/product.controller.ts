@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   UsePipes,
   Patch,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -28,7 +30,11 @@ export class ProductController {
   // Devuelve solo un producto que coincida con el id proporcionado por parametro.
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<Product> {
-    return await this.productService.findById(id);
+    const product = await this.productService.findById(id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    return product;
   }
 
   // Agrega un nuevo producto al arreglo, utilizando pipes para transformar los datos provenientes del usuario
@@ -46,12 +52,28 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
   ) {
-    return this.productService.update(id, updateProductDto);
+    try {
+      const response = this.productService.update(id, updateProductDto);
+      if (!response) {
+        throw new BadRequestException();
+      }
+      return response;
+    } catch (err) {
+      throw new BadRequestException();
+    }
   }
 
   // Este metodo se encarga de borrar un producto, proporcionando el id del producto por parametro.
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<Product> {
-    return this.productService.remove(id);
+    try {
+      const response = this.productService.delete(id);
+      if (!response) {
+        throw new NotFoundException();
+      }
+      return response;
+    } catch (err) {
+      throw new NotFoundException();
+    }
   }
 }
