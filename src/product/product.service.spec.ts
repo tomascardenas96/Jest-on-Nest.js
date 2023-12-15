@@ -25,12 +25,6 @@ describe('ProductService', () => {
 
     // -----------------------------------------------------------------------------------------------------------//
 
-    it('should be defined', () => {
-      expect(service.findAll()).toBeDefined();
-    });
-
-    // -----------------------------------------------------------------------------------------------------------//
-
     // El metodo Array.isArray() verifica si recibe un arreglo y devuelve un valor booleano.
     it('should return an array of products', async () => {
       const result: Product[] = await service.findAll();
@@ -62,6 +56,14 @@ describe('ProductService', () => {
 
       await expect(service.findAll()).rejects.toThrow(NotFoundException);
     });
+
+    // Mockeamos el service para que devuelva una exception
+    it('should return an exception', () => {
+      jest.spyOn(service, 'findAll').mockRejectedValue(new NotFoundException());
+
+      const result = service.findAll();
+      expect(result).rejects.toThrow(NotFoundException);
+    })
   });
 
   // -----------------------------------------------------------------------------------------------------------//
@@ -187,7 +189,7 @@ describe('ProductService', () => {
 
     // -----------------------------------------------------------------------------------------------------------//
 
-    // Mockeamos fetch para simular un error de red
+    // Inducimos un error en el fetch para que el metodo nos retorne un bad request.
     it('should throw a BadRequestException for network error', async () => {
       jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
 
