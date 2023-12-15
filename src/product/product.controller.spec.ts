@@ -2,7 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { Product } from './entities/product.entity';
-import { BadRequestException, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -19,11 +24,14 @@ describe('ProductController', () => {
     service = module.get<ProductService>(ProductService);
   });
 
+  // -----------------------------------------------------------------------------------------------------------//
+
   describe('findAll', () => {
     it('controller should be defined', () => {
       expect(controller).toBeDefined();
     });
 
+    // Este metodo mockea en el service un array de 'Product', para compararlo con lo que retorna el controlador.
     it('should return a list of products', async () => {
       // Configuramos el mock del servicio para devolver una lista de productos simulada
       jest.spyOn(service, 'findAll').mockResolvedValue([
@@ -40,6 +48,8 @@ describe('ProductController', () => {
         { id: 2, description: 'Product 2', price: 29.99, stock: 50 },
       ]);
     });
+
+    // -----------------------------------------------------------------------------------------------------------//
 
     it('should return an array with Product entity syntax', async () => {
       const productMock: Product[] = [
@@ -83,6 +93,8 @@ describe('ProductController', () => {
       expect(result).toEqual(productMock);
     });
 
+    // -----------------------------------------------------------------------------------------------------------//
+
     it('should throw an error if the service fails', async () => {
       // Configuramos el mock del servicio para devolver un error
       jest
@@ -95,6 +107,8 @@ describe('ProductController', () => {
       );
     });
   });
+
+  // -----------------------------------------------------------------------------------------------------------//
 
   describe('findById', () => {
     it('should return a product by ID', async () => {
@@ -118,6 +132,10 @@ describe('ProductController', () => {
         stock: 100,
       });
     });
+
+    // -----------------------------------------------------------------------------------------------------------//
+
+
     it('should throw a NotFoundException for non-existent ID', async () => {
       const nonExistentId = 999;
       // Configuramos el mock del servicio para devolver un producto simulado (o una lista vacía)
@@ -129,6 +147,8 @@ describe('ProductController', () => {
       );
     });
   });
+
+  // -----------------------------------------------------------------------------------------------------------//
 
   describe('create', () => {
     it('should create a new product successfully', async () => {
@@ -154,6 +174,10 @@ describe('ProductController', () => {
       });
     });
   });
+
+  // -----------------------------------------------------------------------------------------------------------//
+
+
   describe('update', () => {
     it('should update a product successfully', async () => {
       const productId = 1;
@@ -162,7 +186,7 @@ describe('ProductController', () => {
         price: 29.99,
         stock: 75,
       };
-    
+
       // Configuramos el mock del servicio para devolver una promesa que resuelva en el producto actualizado
       jest.spyOn(service, 'update').mockResolvedValue(
         Promise.resolve<Product>({
@@ -170,31 +194,38 @@ describe('ProductController', () => {
           description: updateProductDto.description,
           price: updateProductDto.price,
           stock: updateProductDto.stock,
-        })
+        }),
       );
-    
+
       // Realizamos la llamada al método update del controlador
       const result = await controller.update(productId, updateProductDto);
-    
+
       // Verificamos que el resultado sea el producto actualizado simulado
       expect(result).toEqual({
         id: productId,
         ...updateProductDto,
       });
-
     });
+
+    // -----------------------------------------------------------------------------------------------------------//
 
     it('should throw a BadRequestException for invalid DTO', async () => {
       const productId = 1;
-    
+
       // Verificamos que la llamada al método update del controlador lanza un error BadRequestException
-      await expect(controller.update(productId, null)).rejects.toThrow(BadRequestException);
+      await expect(controller.update(productId, null)).rejects.toThrow(
+        BadRequestException,
+      );
     });
-  })
-  describe('delete', ()=> {
+  });
+
+  // -----------------------------------------------------------------------------------------------------------//
+
+
+  describe('delete', () => {
     it('should delete a product successfully', async () => {
       const productId = 1;
-    
+
       // Configuramos el mock del servicio para devolver el producto eliminado
       jest.spyOn(service, 'delete').mockResolvedValue({
         id: productId,
@@ -202,10 +233,10 @@ describe('ProductController', () => {
         price: 19.99,
         stock: 50,
       });
-    
+
       // Realizamos la llamada al método delete del controlador
       const result = await controller.remove(productId);
-    
+
       // Verifica que el resultado sea el producto eliminado simulado
       expect(result).toEqual({
         id: productId,
@@ -215,13 +246,16 @@ describe('ProductController', () => {
       });
     });
 
+    // -----------------------------------------------------------------------------------------------------------//
+
     it('should throw a NotFoundException for non-existent ID', async () => {
       // Creamos un id inexistente para pasarle al metodo delete como parametro.
       const nonExistentId = 8690;
-    
+
       // Verificamos que la llamada al método delete del controlador lanza un error NotFoundException
-      await expect(controller.remove(nonExistentId)).rejects.toThrow(NotFoundException);
+      await expect(controller.remove(nonExistentId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
-    
-  })
+  });
 });
