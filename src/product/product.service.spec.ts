@@ -56,14 +56,6 @@ describe('ProductService', () => {
 
       await expect(service.findAll()).rejects.toThrow(NotFoundException);
     });
-
-    // Mockeamos el service para que devuelva una exception
-    it('should return an exception', () => {
-      jest.spyOn(service, 'findAll').mockRejectedValue(new NotFoundException());
-
-      const result = service.findAll();
-      expect(result).rejects.toThrow(NotFoundException);
-    })
   });
 
   // -----------------------------------------------------------------------------------------------------------//
@@ -117,7 +109,7 @@ describe('ProductService', () => {
 
       // Llamamos a la función lastId y verifica que devuelva el último ID esperado
       const result = await service.lastId();
-      expect(result).toEqual(productsMock.length);
+      expect(result).toEqual(productsMock[productsMock.length - 1].id);
     });
   });
 
