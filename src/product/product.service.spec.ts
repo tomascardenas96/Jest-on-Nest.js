@@ -57,7 +57,7 @@ describe('ProductService', () => {
   });
 
   describe('findById', () => {
-    // Nos aseguramos que llegue un id valido, debe ser un numero entero positivo. 
+    // Nos aseguramos que llegue un id valido, debe ser un numero entero positivo.
     it('must be a valid id', async () => {
       const resultOk = await service.findById(1);
       expect(isInt(resultOk.id) && isPositive(resultOk.id)).toBe(true);
@@ -87,7 +87,7 @@ describe('ProductService', () => {
   });
 
   describe('lastID', () => {
-    // Nos aseguramos que la funcion para encontrar el ultimo id (utilizada en el metodo create), funcione 
+    // Nos aseguramos que la funcion para encontrar el ultimo id (utilizada en el metodo create), funcione
     // correctamente.
     it('should return the last ID for existing products', async () => {
       // Configuramos el mock para devolver una lista de productos
@@ -96,15 +96,15 @@ describe('ProductService', () => {
         { id: 2, description: 'Product 2', price: 24.99, stock: 30 },
       ];
       jest.spyOn(service, 'findAll').mockResolvedValue(productsMock);
-    
+
       // Llamamos a la función lastId y verifica que devuelva el último ID esperado
       const result = await service.lastId();
       expect(result).toEqual(productsMock.length);
     });
-  })
+  });
 
   describe('create', () => {
-    // El metodo create debe retornar un nuevo producto. (Hecho con un mock para que no se invoque al metodo real ya 
+    // El metodo create debe retornar un nuevo producto. (Hecho con un mock para que no se invoque al metodo real ya
     // que crearia un objeto no deseado)
     it('should return a new product successfully', async () => {
       // Creamos un producto de prueba.
@@ -179,13 +179,17 @@ describe('ProductService', () => {
       jest.spyOn(global, 'fetch').mockRestore();
     });
   });
-  
+
   describe('delete', () => {
     // Esta prueba llama al metodo delete con un id valido, y se asegura que se borre correctamente.
     it('should delete an existing product successfully', async () => {
-      const deleted = jest
-        .spyOn(service, 'delete')
-        .mockResolvedValue({ id: 1, description: 'prueba' , price: 2, stock: 10});
+      jest.spyOn(service, 'delete')
+        .mockResolvedValue({
+          id: 1,
+          description: 'prueba',
+          price: 2,
+          stock: 10,
+        });
 
       // Llamamos al método delete para eliminar el producto
       const deletedProduct = await service.delete(1);
