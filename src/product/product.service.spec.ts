@@ -16,6 +16,7 @@ describe('ProductService', () => {
   });
 
   describe('findAll', () => {
+    // Verificamos que el servicio este definido.
     it('service should be defined', () => {
       expect(service).toBeDefined();
     });
@@ -24,12 +25,13 @@ describe('ProductService', () => {
       expect(service.findAll()).toBeDefined();
     });
 
-    //El metodo Array.isArray() verifica si recibe un arreglo y devuelve un valor booleano.
+    // El metodo Array.isArray() verifica si recibe un arreglo y devuelve un valor booleano.
     it('should return an array of products', async () => {
       const result: Product[] = await service.findAll();
       expect(Array.isArray(result)).toBe(true);
     });
 
+    // Verificamos que cada uno de los productos cumpla con la sintaxis de la entidad Product.
     it('Array must respect entity structure', async () => {
       const result: Product[] = await service.findAll();
       result.forEach((product: Product) => {
@@ -44,6 +46,7 @@ describe('ProductService', () => {
       });
     });
 
+    // En este test forzamos un error utilizando un mock en el servicio, para asegurarnos que devuelva una excepcion.
     it('should return an exception when ocurrs an error', async () => {
       const findAllSpy = jest
         .spyOn(service, 'findAll')
@@ -54,22 +57,22 @@ describe('ProductService', () => {
   });
 
   describe('findById', () => {
+    // Nos aseguramos que llegue un id valido, debe ser un numero entero positivo. 
     it('must be a valid id', async () => {
-      //Verificamos que efectivamente este llegando un numero y que sea positivo.
       const resultOk = await service.findById(1);
       expect(isInt(resultOk.id) && isPositive(resultOk.id)).toBe(true);
     });
 
+    //Verificamos que, cuando se envie un id inexistente por parametro, devuelva la excepcion correspondiente.
     it('must return an exception (404)', async () => {
-      //Verificamos que, cuando se envie un id inexistente por parametro, devuelva la excepcion correspondiente.
       const inexistentId: number = 1500;
       await expect(() => service.findById(inexistentId)).rejects.toThrow(
         NotFoundException,
       );
     });
 
+    //Verificamos si el objeto que devuelve cumple con la estructura basica.
     it('should comply with basic syntax', async () => {
-      //Verificamos si el objeto que devuelve cumple con la estructura basica.
       const resultOk = await service.findById(1);
 
       expect(resultOk).toEqual(
@@ -84,6 +87,8 @@ describe('ProductService', () => {
   });
 
   describe('lastID', () => {
+    // Nos aseguramos que la funcion para encontrar el ultimo id (utilizada en el metodo create), funcione 
+    // correctamente.
     it('should return the last ID for existing products', async () => {
       // Configuramos el mock para devolver una lista de productos
       const productsMock: Product[] = [
@@ -99,6 +104,8 @@ describe('ProductService', () => {
   })
 
   describe('create', () => {
+    // El metodo create debe retornar un nuevo producto. (Hecho con un mock para que no se invoque al metodo real ya 
+    // que crearia un objeto no deseado)
     it('should return a new product successfully', async () => {
       // Creamos un producto de prueba.
       const newProduct: Product = {
@@ -129,8 +136,9 @@ describe('ProductService', () => {
   });
 
   describe('update', () => {
+    // Metodo encargado de actualizar un producto ya existente, enviandole un parametro valido.
     it('should update an existing product successfully', async () => {
-      // Llamamos al método update para actualizar el producto
+      // Llamamos al método update para actualizar el producto.
       const updatedProduct = await service.update(1, {
         description: 'Updated product',
         price: 29.99,
@@ -155,8 +163,8 @@ describe('ProductService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
+    // Mockeamos fetch para simular un error de red
     it('should throw a BadRequestException for network error', async () => {
-      // Mockear fetch para simular un error de red
       jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
 
       await expect(
@@ -171,6 +179,7 @@ describe('ProductService', () => {
       jest.spyOn(global, 'fetch').mockRestore();
     });
   });
+  
   describe('delete', () => {
     // Esta prueba llama al metodo delete con un id valido, y se asegura que se borre correctamente.
     it('should delete an existing product successfully', async () => {
