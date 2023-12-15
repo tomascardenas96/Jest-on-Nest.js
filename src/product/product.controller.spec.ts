@@ -58,25 +58,7 @@ describe('ProductController', () => {
           description: 'Holaa',
           price: 200,
           stock: 1,
-        },
-        {
-          id: 2,
-          description: 'Holaa',
-          price: 200,
-          stock: 1,
-        },
-        {
-          id: 3,
-          description: 'Holaa',
-          price: 200,
-          stock: 1,
-        },
-        {
-          id: 4,
-          description: 'Chau',
-          price: 100,
-          stock: 30,
-        },
+        }
       ];
 
       const productTest = jest
@@ -95,11 +77,11 @@ describe('ProductController', () => {
 
     // -----------------------------------------------------------------------------------------------------------//
 
+    // Mockeamos el service para simular un error en el servicio, y luego lo comparamos con lo que retornaria el 
+    // controlador
     it('should throw an error if the service fails', async () => {
       // Configuramos el mock del servicio para devolver un error
-      jest
-        .spyOn(service, 'findAll')
-        .mockRejectedValue(new Error('Error forzado'));
+      jest.spyOn(service, 'findAll').mockRejectedValue(new Error('Error forzado'));
 
       // Verificamos que la llamada al método findAll del controlador lanza un error
       await expect(controller.findAll()).rejects.toThrow(
@@ -138,8 +120,6 @@ describe('ProductController', () => {
 
     it('should throw a NotFoundException for non-existent ID', async () => {
       const nonExistentId = 999;
-      // Configuramos el mock del servicio para devolver un producto simulado (o una lista vacía)
-      jest.spyOn(service, 'findById').mockResolvedValue(null);
 
       // Verificamos que la llamada al método findById del controlador lanza un error NotFoundException
       await expect(controller.findById(nonExistentId)).rejects.toThrow(
@@ -181,12 +161,13 @@ describe('ProductController', () => {
   describe('update', () => {
     it('should update a product successfully', async () => {
       const productId = 1;
+      
       const updateProductDto: UpdateProductDto = {
         description: 'Producto actualizado',
         price: 29.99,
         stock: 75,
       };
-
+      
       // Configuramos el mock del servicio para devolver una promesa que resuelva en el producto actualizado
       jest.spyOn(service, 'update').mockResolvedValue(
         Promise.resolve<Product>({
@@ -210,10 +191,8 @@ describe('ProductController', () => {
     // -----------------------------------------------------------------------------------------------------------//
 
     it('should throw a BadRequestException for invalid DTO', async () => {
-      const productId = 1;
-
       // Verificamos que la llamada al método update del controlador lanza un error BadRequestException
-      await expect(controller.update(productId, null)).rejects.toThrow(
+      await expect(controller.update(1, null)).rejects.toThrow(
         BadRequestException,
       );
     });
