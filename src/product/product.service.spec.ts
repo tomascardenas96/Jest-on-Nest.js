@@ -83,6 +83,21 @@ describe('ProductService', () => {
     });
   });
 
+  describe('lastID', () => {
+    it('should return the last ID for existing products', async () => {
+      // Configuramos el mock para devolver una lista de productos
+      const productsMock: Product[] = [
+        { id: 1, description: 'Product 1', price: 19.99, stock: 50 },
+        { id: 2, description: 'Product 2', price: 24.99, stock: 30 },
+      ];
+      jest.spyOn(service, 'findAll').mockResolvedValue(productsMock);
+    
+      // Llamamos a la función lastId y verifica que devuelva el último ID esperado
+      const result = await service.lastId();
+      expect(result).toEqual(productsMock.length);
+    });
+  })
+
   describe('create', () => {
     it('should return a new product successfully', async () => {
       // Creamos un producto de prueba.
@@ -115,14 +130,14 @@ describe('ProductService', () => {
 
   describe('update', () => {
     it('should update an existing product successfully', async () => {
-      // Llamar al método update para actualizar el producto
+      // Llamamos al método update para actualizar el producto
       const updatedProduct = await service.update(1, {
         description: 'Updated product',
         price: 29.99,
         stock: 200,
       });
 
-      // Verificar que el producto se haya actualizado correctamente
+      // Verificamos que el producto se haya actualizado correctamente
       expect(updatedProduct.id).toBe(1);
       expect(updatedProduct.description).toBe('Updated product');
       expect(updatedProduct.price).toBe(29.99);

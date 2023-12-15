@@ -41,7 +41,7 @@ export class ProductService {
     }
   }
 
-  private async lastId(): Promise<number> {
+  async lastId(): Promise<number> {
     const allProducts: Product[] = await this.findAll();
     return allProducts.length;
   }
